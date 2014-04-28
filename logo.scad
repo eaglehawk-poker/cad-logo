@@ -1,4 +1,6 @@
-use <Spiff.scad>;
+//use <Spiff.scad>;
+use <TextGenerator.scad>;
+//use <Write.scad>;
 
 module card(width, height, radius) {
 	thickness = 5;
@@ -39,7 +41,7 @@ module card(width, height, radius) {
 module logo_cards() {
 
 	color([0.0, 0.0, 0.0, 1.0])
-	card(20, 30, 3);
+	card(20, 32, 3);
 
 	color([1.0, 0.0, 0.0, 1.0])
 	difference() {
@@ -52,19 +54,66 @@ module logo_cards() {
 	}
 }
 
-// Cards
-translate([-12.5, 2.5, 29])
-rotate([90, 0, 0])
-logo_cards();
+module plate(dx, dy, dz) {
+	difference() {
+		translate([-dx/2, -dy/2, -dz/2])
+		cube([dx, dy, dz]);
 
-// Bottom
-color([0.0, 0.0, 0.0, 1.0])
-translate([-30, -15, 0])
-cube([60, 30, 9]);
+		translate([-dx/2, dy/2, dz/2])
+		rotate([0, 90, 0])
+		cylinder(h=dx, r=1, $fn=100);
+
+		translate([-dx/2, -dy/2, dz/2])
+		rotate([0, 90, 90])
+		cylinder(h=dy, r=1, $fn=100);
+
+		translate([dx/2, -dy/2, dz/2])
+		rotate([0, 90, 180])
+		cylinder(h=dx, r=1, $fn=100);
+
+		translate([dx/2, dy/2, dz/2])
+		rotate([0, 90, 270])
+		cylinder(h=dy, r=1, $fn=100);
+	}
+}
+
+module whole_shebang() {
+
+	union() {
+		// Cards
+		//translate([-12.5, 2.5, 29])
+		translate([-11.5, 2.5, 22])
+		rotate([90, 0, 0])
+		logo_cards();
+
+		// Bottom
+		//color([0.0, 0.0, 0.7, 1.0])
+		color([1.0, 1.0, 1.0, 1.0])
+		
+		translate([0, 0, 4])
+		plate(60, 30, 11);
+		translate([0, 0, -1])
+		plate(62, 32, 2);
+		//cube([60, 30, 9]);
+
+		// Sticks
+
+
+		//Text
+		color([1.0, 0.0, 0.0, 1.0])
+		translate([-15, -13, 2])
+		scale([0.6, 3, 0.6])
+		rotate([90, 0, 0])
+		drawtext("eaglehawk");
+		//write("eaglehawk");
+	}
+}
+
+whole_shebang();
 
 //Text
-color([1.0, 0.0, 0.0, 1.0])
-translate([-15, -16, 2])
-scale([0.5, 2, 0.5])
-rotate([90, 0, 0])
-write("eaglehawk");
+//color([1.0, 0.0, 0.0, 1.0])
+//translate([-15, -15, 2])
+//rotate([90, 0, 0])
+//scale([2., 2, 2.5])
+//write("Hello World");
